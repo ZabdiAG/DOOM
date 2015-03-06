@@ -7,6 +7,16 @@ CMD="/usr/bin/curl -L"
 RAWFILE="raw.html"
 ## TODO We should extract emails from redirection or DB
 OURINBOX="test@todosconsalum.tk"
+## Which service?
+case "$1" in
+  google)   google
+    exit 0
+    ;;
+  *)
+    echo -e "\n\tUsage: $0 <google|facebook|twitter>\n"
+    exit 1
+    ;;
+esac
 
 ## Utility functions
 ## Look for Form fileds
@@ -62,14 +72,7 @@ if [ ! -x $WORKDIR ] ; then
 fi
 cd $WORKDIR
 
-## Which service?
-case "$1" in
-  google)   google
-    ;;
-  *)
-    echo "Invalid!"
-    ;;
-esac
+
 function setPost {
   ## multipart/form-data
   POSTDATA="\"$FNAME=$VFNAME;$LNAME=$VLNAME;$UNAME=$VUNAME"
@@ -79,6 +82,7 @@ function setPost {
   POSTDATA="$POSTDATA;$BMONTH=$VBMONTH;$BDAY=$VBDAY"
   POSTDATA="$POSTDATA;$BYEAR=$VBYEAR;$GENDER=$VGENDER"
   POSTDATA="$POSTDATA;$EMAIL=$VEMAIL;$TOS=$VTOS\""
+  # TODO 
   echo $CMD -XPOST -F$POSTDATA
 }
 
