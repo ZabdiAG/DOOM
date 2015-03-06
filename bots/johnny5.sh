@@ -1,5 +1,4 @@
-#!/bin/bash
-
+#!/bin/env bash
 TEMPDIR=/tmp
 WORKDIR="$TEMPDIR/goose/$(date +%Y%m%d%H%M%s)"
 CWD=$(pwd)
