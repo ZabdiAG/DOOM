@@ -59,6 +59,12 @@ case "$1" in
     google
     #exit 0
     ;;
+  facebook)
+    facebook
+    ;;
+  twitter)
+    twitter
+    ;;
   *)
     echo -e "\n\tUsage: $0 <google|facebook|twitter>\n"
     exit 1
