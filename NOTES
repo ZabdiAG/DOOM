@@ -45,3 +45,12 @@ https://accounts.google.com/SignUp
 4. All info (requests validator)
 
   {"input01":{"Input":"Birthday","BirthMonth":"10","BirthDay":"12","BirthYear":"1978"},"Locale":"en"}
+
+----
+HTML process
+----
+
+cat FILE | awk '{ if(NF > 0) printf("%s\n", 0)}'
+
+
+cat FILE | awk 'BEGIN {IGNORECASE=1 ; FS="<input|/input>" ; RS=">"} { print $2 }'

@@ -2,8 +2,10 @@
 TEMPDIR=/tmp
 WORKDIR="$TEMPDIR/goose/$(date +%Y%m%d%H%M%s)"
 CWD=$(pwd)
+SCRIPTSDIR=${0%/*}
 CMD="/usr/bin/curl -L"
 RAWFILE="raw.html"
+CSVFILE="form.csv"
 ## TODO We should extract emails from redirection or DB
 OURINBOX="test@todosconsalum.tk"
 
@@ -19,10 +21,13 @@ function mkWorkdir {
 
 ## Look for Form fileds
 function lookFields {
-  grep -E -e '<input*' -e '*/input>' -e '<form.*>' \
-    --color \
-    $WORKDIR/$RAWFILE
+  $SCRIPTSDIR/formparser.py $WORKDIR/$RAWFILE > $WORKDIR/$CSVFILE
+  cat $WORKDIR/$CSVFILE
+  #grep -E -e '<input*' -e '*/input>' -e '<form.*>' \
+  #  --color \
+  #  $WORKDIR/$RAWFILE
 }
+
 
 ## VARIABLE="FieldName" <-- The name attribute of the form field
 function google {
