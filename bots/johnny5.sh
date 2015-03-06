@@ -3,13 +3,17 @@
 TEMPDIR=/tmp
 WORKDIR="$TEMPDIR/goose/$(date +%Y%m%d%H%M%s)"
 CWD=$(pwd)
-CMD="/usr/bin/curl"
+CMD="/usr/bin/curl -L"
 RAWFILE="raw.html"
+## TODO We should extract emails from redirection or DB
+OURINBOX="test@todosconsalum.tk"
 
 ## Utility functions
 ## Look for Form fileds
 function lookFields {
-  grep '<input.*>' $WORKDIR/$RAWFILE
+  grep -E -e '<input*' -e '*/input>' -e '<form.*>' \
+    --color \
+    $WORKDIR/$RAWFILE
 }
 
 ## VARIABLE="FieldName" <-- The name attribute of the form field
@@ -23,7 +27,7 @@ function google {
   UNAME="GmailAddress"
   PASSWD="Passwd"
   PASSWDC="PasswdAgain"
-  LOCALE="es"
+  LOCALE="Locale"
   INPUT="Input" # BirthDay
   BMONTH="BirthMonth" # 10
   BDAY="BirthDay" # 12
@@ -38,13 +42,13 @@ function google {
   VPASSWD="Passwd"
   VPASSWDC="PasswdAgain"
   VLOCALE="es"
-  VINPUT="Input" # BirthDay
-  VBMONTH="BirthMonth" # 10
-  VBDAY="BirthDay" # 12
-  VBYEAR="BirthYear" # 1978
-  VGENDER="Gender" # FEMALE MALE OTHER
-  VEMAIL="RecoveryEmailAddress"
-  VTOS="TermsOfService" # yes
+  VINPUT="BirthDay"
+  VBMONTH="10"
+  VBDAY="12"
+  VBYEAR="1978"
+  VGENDER="OTHER" # FEMALE MALE OTHER
+  VEMAIL="$OURINBOX"
+  VTOS="yes" # yes
   ## Hidden fields
   VTIMESTMP="timeStmp"
   VSECTOK="secTok"
@@ -83,4 +87,4 @@ echo $CMD -XPOST -F$POSTDATA
 lookFields
 
 ## Finish him!
-rm -rf $TEMPDIR/goose
+#rm -rf $TEMPDIR/goose
