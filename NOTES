@@ -1,0 +1,47 @@
+
+Google
+----
+
+https://accounts.google.com/SignUp
+
+1. Landing page
+
+
+2. Input validation
+
+  Request
+
+  https://accounts.google.com/InputValidator?resource=SignUp
+
+
+  Response
+
+  {"input01":{"Input":"GmailAddress","GmailAddress":"flaquevio","FirstName":"Flavio","LastName":"Enrique"},"Locale":"en"}
+  {"input01":{"Input":"Passwd","Passwd":"123","PasswdAgain":"123","FirstName":"Flavio","LastName":"Enrique","GmailAddress":"flaquevio"},"Locale":"en"}
+
+
+3. RatePassword
+
+  * Request
+
+  https://accounts.google.com/RatePassword
+
+  * Params
+
+  Passwd: "xcv"
+  Email: "sdf"
+  FirstName: "wer"
+  LastName: "ygn"
+
+  * Response (it requests InputValidator)
+
+ input01:Object 
+    Valid:"false"
+    ErrorMessage:"Short passwords are easy to guess. Try one with at least 8 characters."
+    Errors:Object
+      Passwd:"Short passwords are easy to guess. Try one with at least 8 characters."
+  Locale:"en"
+
+4. All info (requests validator)
+
+  {"input01":{"Input":"Birthday","BirthMonth":"10","BirthDay":"12","BirthYear":"1978"},"Locale":"en"}
