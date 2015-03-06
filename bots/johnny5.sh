@@ -66,7 +66,7 @@ case "$1" in
 esac
 
 ## IMPORTANT!!!
-## TODO csv2var should be the last fnuction before processing? 
+## TODO csv2var should be the last fnuction before processing?
 ## Read the CSV form data and fill VVariables
 function csv2var {
   while IFS=',' read -r FIELD VALUE
@@ -107,7 +107,7 @@ function setPost {
 }
 
 csv2var
-echo $TIMESTAMP $VTIMESTMP
+setPost
 ## Finish him!
 ## TODO uncomment when finished
 #rm -rf $TEMPDIR/goose
