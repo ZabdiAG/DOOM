@@ -15,7 +15,8 @@ function lookFields {
 ## VARIABLE="FieldName" <-- The name attribute of the form field
 function google {
   URL="https://accounts.google.com/SignUp"
-  CGET="$URL -o $WORKDIR/$RAWFILE"
+  #CGET="$URL -o $WORKDIR/$RAWFILE"
+  CMD="$CMD $URL -o $WORKDIR/$RAWFILE"
   ## Form fields
   FNAME="FirstName"
   LNAME="LastName"
@@ -48,6 +49,7 @@ function google {
   VTIMESTMP="timeStmp"
   VSECTOK="secTok"
 
+  $CMD
 }
 
 
@@ -76,6 +78,9 @@ POSTDATA="$POSTDATA;$EMAIL=$VEMAIL;$TOS=$VTOS\""
 
 
 ## Process
-$CMD $CGET
+#$CMD $CGET
 echo $CMD -XPOST -F$POSTDATA
 lookFields
+
+## Finish him!
+rm -rf $TEMPDIR/goose
