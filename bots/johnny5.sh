@@ -7,18 +7,17 @@ CMD="/usr/bin/curl -L"
 RAWFILE="raw.html"
 ## TODO We should extract emails from redirection or DB
 OURINBOX="test@todosconsalum.tk"
-## Which service?
-case "$1" in
-  google)   google
-    exit 0
-    ;;
-  *)
-    echo -e "\n\tUsage: $0 <google|facebook|twitter>\n"
-    exit 1
-    ;;
-esac
 
 ## Utility functions
+## Create work directory
+function mkWorkdir {
+  if [ ! -x $WORKDIR ] ; then
+    echo -e "Create work directory\n"
+    mkdir -p $WORKDIR
+  fi
+#cd $WORKDIR
+}
+
 ## Look for Form fileds
 function lookFields {
   grep -E -e '<input*' -e '*/input>' -e '<form.*>' \
@@ -28,6 +27,7 @@ function lookFields {
 
 ## VARIABLE="FieldName" <-- The name attribute of the form field
 function google {
+  mkWorkdir
   URL="https://accounts.google.com/SignUp"
   CMD="$CMD $URL -o $WORKDIR/$RAWFILE"
   ## Form fields
@@ -61,17 +61,23 @@ function google {
   ## Hidden fields
   VTIMESTMP="timeStmp"
   VSECTOK="secTok"
-
+  ## Get registration form
   $CMD
+  ## Process
+  lookFields
 }
 
-
-if [ ! -x $WORKDIR ] ; then
-  echo -e "Create work directory\n"
-  mkdir -p $WORKDIR
-fi
-cd $WORKDIR
-
+## Which service?
+case "$1" in
+  google)
+    google
+    exit 0
+    ;;
+  *)
+    echo -e "\n\tUsage: $0 <google|facebook|twitter>\n"
+    exit 1
+    ;;
+esac
 
 function setPost {
   ## multipart/form-data
@@ -86,8 +92,6 @@ function setPost {
   echo $CMD -XPOST -F$POSTDATA
 }
 
-## Process
-lookFields
 
 ## Finish him!
 ## TODO uncomment when finished
