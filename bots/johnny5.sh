@@ -19,7 +19,6 @@ function lookFields {
 ## VARIABLE="FieldName" <-- The name attribute of the form field
 function google {
   URL="https://accounts.google.com/SignUp"
-  #CGET="$URL -o $WORKDIR/$RAWFILE"
   CMD="$CMD $URL -o $WORKDIR/$RAWFILE"
   ## Form fields
   FNAME="FirstName"
@@ -71,20 +70,21 @@ case "$1" in
     echo "Invalid!"
     ;;
 esac
-## multipart/form-data
-POSTDATA="\"$FNAME=$VFNAME;$LNAME=$VLNAME;$UNAME=$VUNAME"
-POSTDATA="$POSTDATA;$PASSWD=$VPASSWD;$PASSWDC=$VPASSWDC"
-POSTDATA="$POSTDATA;$LOCALE=$VLOCALE;$INPUT=$VINPUT"
-## TODO Maybe I need an IF for different services
-POSTDATA="$POSTDATA;$BMONTH=$VBMONTH;$BDAY=$VBDAY"
-POSTDATA="$POSTDATA;$BYEAR=$VBYEAR;$GENDER=$VGENDER"
-POSTDATA="$POSTDATA;$EMAIL=$VEMAIL;$TOS=$VTOS\""
-
+function setPost {
+  ## multipart/form-data
+  POSTDATA="\"$FNAME=$VFNAME;$LNAME=$VLNAME;$UNAME=$VUNAME"
+  POSTDATA="$POSTDATA;$PASSWD=$VPASSWD;$PASSWDC=$VPASSWDC"
+  POSTDATA="$POSTDATA;$LOCALE=$VLOCALE;$INPUT=$VINPUT"
+  ## TODO Maybe I need an IF for different services
+  POSTDATA="$POSTDATA;$BMONTH=$VBMONTH;$BDAY=$VBDAY"
+  POSTDATA="$POSTDATA;$BYEAR=$VBYEAR;$GENDER=$VGENDER"
+  POSTDATA="$POSTDATA;$EMAIL=$VEMAIL;$TOS=$VTOS\""
+  echo $CMD -XPOST -F$POSTDATA
+}
 
 ## Process
-#$CMD $CGET
-echo $CMD -XPOST -F$POSTDATA
 lookFields
 
 ## Finish him!
+## TODO uncomment when finished
 #rm -rf $TEMPDIR/goose
