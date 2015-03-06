@@ -31,22 +31,22 @@ function google {
   EMAIL="RecoveryEmailAddress"
   TOS="TermsOfService" # yes
   # Form VALUES
-  FNAME="FirstName"
-  LNAME="LastName"
-  UNAME="GmailAddress"
-  PASSWD="Passwd"
-  PASSWDC="PasswdAgain"
-  LOCALE="es"
-  INPUT="Input" # BirthDay
-  BMONTH="BirthMonth" # 10
-  BDAY="BirthDay" # 12
-  BYEAR="BirthYear" # 1978
-  GENDER="Gender" # FEMALE MALE OTHER
-  EMAIL="RecoveryEmailAddress"
-  TOS="TermsOfService" # yes
+  VFNAME="FirstName"
+  VLNAME="LastName"
+  VUNAME="GmailAddress"
+  VPASSWD="Passwd"
+  VPASSWDC="PasswdAgain"
+  VLOCALE="es"
+  VINPUT="Input" # BirthDay
+  VBMONTH="BirthMonth" # 10
+  VBDAY="BirthDay" # 12
+  VBYEAR="BirthYear" # 1978
+  VGENDER="Gender" # FEMALE MALE OTHER
+  VEMAIL="RecoveryEmailAddress"
+  VTOS="TermsOfService" # yes
   ## Hidden fields
-  TIMESTMP="timeStmp"
-  SECTOK="secTok"
+  VTIMESTMP="timeStmp"
+  VSECTOK="secTok"
 
 }
 
