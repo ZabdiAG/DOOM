@@ -22,11 +22,8 @@ function mkWorkdir {
 ## Look for Form fileds
 function lookFields {
   $SCRIPTSDIR/formparser.py $WORKDIR/$RAWFILE > $WORKDIR/$CSVFILE
-  cat $WORKDIR/$CSVFILE
-  #grep -E -e '<input*' -e '*/input>' -e '<form.*>' \
-  #  --color \
-  #  $WORKDIR/$RAWFILE
 }
+
 
 
 ## VARIABLE="FieldName" <-- The name attribute of the form field
@@ -48,40 +45,53 @@ function google {
   GENDER="Gender" # FEMALE MALE OTHER
   EMAIL="RecoveryEmailAddress"
   TOS="TermsOfService" # yes
-  # Form VALUES
-  VFNAME="FirstName"
-  VLNAME="LastName"
-  VUNAME="GmailAddress"
-  VPASSWD="Passwd"
-  VPASSWDC="PasswdAgain"
-  VLOCALE="es"
-  VINPUT="BirthDay"
-  VBMONTH="10"
-  VBDAY="12"
-  VBYEAR="1978"
-  VGENDER="OTHER" # FEMALE MALE OTHER
-  VEMAIL="$OURINBOX"
-  VTOS="yes" # yes
-  ## Hidden fields
-  VTIMESTMP="timeStmp"
-  VSECTOK="secTok"
+  TIMESTAMP="timeStmp"
   ## Get registration form
   $CMD
   ## Process
   lookFields
 }
 
+
 ## Which service?
 case "$1" in
   google)
     google
-    exit 0
+    #exit 0
     ;;
   *)
     echo -e "\n\tUsage: $0 <google|facebook|twitter>\n"
     exit 1
     ;;
 esac
+
+## IMPORTANT!!!
+## TODO csv2var should be the last fnuction before processing? 
+## Read the CSV form data and fill VVariables
+function csv2var {
+  while IFS=',' read -r FIELD VALUE
+  do
+    case "$FIELD" in
+      "$FNAME") VFNAME="$VALUE" ;;
+      "$LNAME") VLNAME="$VALUE" ;;
+      "$UNAME") VUNAME="$VALUE" ;;
+      "$PASSWD") VPASSWD="$VALUE" ;;
+      "$PASSWDC") VPASSWDC="$VALUE" ;;
+      "$LOCALE") VLOCALE="$VALUE" ;;
+      "$INPUT") VINPUT="$VALUE" ;;
+      "$BMONTH") VBMONTH="$VALUE" ;;
+      "$BDAY") VBDAY="$VALUE" ;;
+      "$BYEAR") VBYEAR="$VALUE" ;;
+      "$GENDER") VGENDER="$VALUE" ;;
+      "$EMAIL") VEMAIL="$VALUE" ;;
+      "$TOS") VTOS="$VALUE" ;;
+      "$TIMESTAMP") VTIMESTMP="$VALUE" ;;
+    esac
+  done < "$WORKDIR/$CSVFILE"
+  ## Hidden fields
+  VSECTOK="secTok"
+
+}
 
 function setPost {
   ## multipart/form-data
@@ -92,11 +102,12 @@ function setPost {
   POSTDATA="$POSTDATA;$BMONTH=$VBMONTH;$BDAY=$VBDAY"
   POSTDATA="$POSTDATA;$BYEAR=$VBYEAR;$GENDER=$VGENDER"
   POSTDATA="$POSTDATA;$EMAIL=$VEMAIL;$TOS=$VTOS\""
-  # TODO 
+  # TODO
   echo $CMD -XPOST -F$POSTDATA
 }
 
-
+csv2var
+echo $TIMESTAMP $VTIMESTMP
 ## Finish him!
 ## TODO uncomment when finished
 #rm -rf $TEMPDIR/goose
