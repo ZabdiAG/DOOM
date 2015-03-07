@@ -99,6 +99,7 @@ function facebook{
   recaptcha_type="recaptcha_type"
   captcha_response="captcha_response"
   qsstamp="qsstamp"
+  lsd="lsd"
 
   # Form VALUES
   VFNAME="FirstName"
