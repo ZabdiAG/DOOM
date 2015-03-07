@@ -16,7 +16,6 @@ function mkWorkdir {
     echo -e "Create work directory\n"
     mkdir -p $WORKDIR
   fi
-#cd $WORKDIR
 }
 
 ## Look for Form fileds
@@ -52,6 +51,38 @@ function google {
   lookFields
 }
 
+function twitter {
+  mkWorkdir
+  URL="https://twitter.com/signup"
+  CMD="$CMD $URL -o $WORKDIR/$RAWFILE"
+  ## Form fields
+  FNAME="user[name]"
+  SNAME="user[screen_name]"
+  UNAME="user[email]"
+  PASSWD="user[user_password]"
+  COOKIE="user[use_cookie_personalization]"
+  # Form VALUES
+  VFNAME="FirstName"
+  VSNAME="Screen_Name"
+  VUNAME="GmailAddress"
+  VPASSWD="Passwd"
+  VCOOKIE="personalization"
+  ## Hidden fields
+  VAUT_TOKEN="authenticity_token"
+  VSIGNUP="signup_ui_metrics"
+  VPERSONALIZATION="asked_cookie_personalization_setting"
+  VCONTEXT="context"
+  VID="ad_id"
+  VREF="ad_ref"
+  VREMENBER="user[remember_me_on_signup]"
+  VDISCOVERABLE="user[discoverable_by_email]"
+  VSEND="user[send_email_newsletter]"
+
+  ## Get registration form
+  $CMD
+  ## Process
+  lookFields
+}
 
 ## Which service?
 case "$1" in
