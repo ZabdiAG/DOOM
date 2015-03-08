@@ -25,13 +25,11 @@ function lookFields {
 }
 
 
-
 ## VARIABLE="FieldName" <-- The name attribute of the form field
 function google {
   mkWorkdir
   URL="https://accounts.google.com/SignUp"
   CMD="$CMD $URL -o $WORKDIR/$RAWFILE"
-  ## Form fields
   FNAME="FirstName"
   LNAME="LastName"
   UNAME="GmailAddress"
@@ -46,6 +44,18 @@ function google {
   EMAIL="RecoveryEmailAddress"
   TOS="TermsOfService" # yes
   TIMESTAMP="timeStmp"
+  SECTOK="secTok"
+  DSH="dsh"
+  KTL="ktl"
+  _UTF8="_utf8"
+  BGRESPONSE="bgresponse"
+  SKIPCAPTCHA="SkipCaptcha"
+  SIGNUPTOKEN="signuptoken"
+  SIGNUPTOKENA="signuptoken_audio"
+  SIGNUPTOKENS="signuptokenStats"
+  RECAPTCHAKV="recaptchaKeyVersion"
+  RECAPTCHAC="recaptcha_challenge"
+  SUBMIT="Next step"
   ## Get registration form
   $CMD
   ## Process
@@ -62,13 +72,11 @@ function twitter {
   UNAME="user[email]"
   PASSWD="user[user_password]"
   COOKIE="user[use_cookie_personalization]"
-  # Form VALUES
   VFNAME="FirstName"
   VSNAME="Screen_Name"
   VUNAME="GmailAddress"
   VPASSWD="Passwd"
   VCOOKIE="personalization"
-  ## Hidden fields
   VAUT_TOKEN="authenticity_token"
   VSIGNUP="signup_ui_metrics"
   VPERSONALIZATION="asked_cookie_personalization_setting"
@@ -84,7 +92,8 @@ function twitter {
   ## Process
   lookFields
 }
-function facebook{
+
+function facebook {
   mkWorkdir
   URL="https://facebook.com"
   CMD="$CMD $URL -o $WORKDIR/$RAWFILE"
@@ -104,22 +113,21 @@ function facebook{
 #  EMAIL="RecoveryEmailAddress"
 #  TOS="TermsOfService" # yes
   WEBSUBMIT="websubmit"
-  referrer="referrer"
-  asked_to_login="asked_to_login"
-  terms="terms"
-  ab_test_data="ab_test_data"
-  contactpoint_label="contactpoint_label"
-  locale="locale"
-  reg_instance="reg_instance"
-  captcha_persist_data="captcha_persist_data"
-  captcha_session="captcha_session"
-  extra_challenge_params="extra_challenge_params"
-  recaptcha_type="recaptcha_type"
-  captcha_response="captcha_response"
-  qsstamp="qsstamp"
-  lsd="lsd"
+#  referrer="referrer"
+#  asked_to_login="asked_to_login"
+#  terms="terms"
+#  ab_test_data="ab_test_data"
+#  contactpoint_label="contactpoint_label"
+#  locale="locale"
+#  reg_instance="reg_instance"
+#  captcha_persist_data="captcha_persist_data"
+#  captcha_session="captcha_session"
+#  extra_challenge_params="extra_challenge_params"
+#  recaptcha_type="recaptcha_type"
+#  captcha_response="captcha_response"
+#  qsstamp="qsstamp"
+#  lsd="lsd"
 
-  # Form VALUES
   VFNAME="FirstName"
   VLNAME="LastName"
   VUNAME="GmailAddress"
@@ -133,7 +141,6 @@ function facebook{
   VGENDER="OTHER" # FEMALE MALE OTHER
   VEMAIL="$OURINBOX"
   VTOS="yes" # yes
-  ## Hidden fields
   VTIMESTMP="timeStmp"
   VSECTOK="secTok"
   ## Get registration form
@@ -146,7 +153,6 @@ function facebook{
 case "$1" in
   google)
     google
-    #exit 0
     ;;
   facebook)
     facebook
@@ -181,11 +187,20 @@ function csv2var {
       "$EMAIL") VEMAIL="$VALUE" ;;
       "$TOS") VTOS="$VALUE" ;;
       "$TIMESTAMP") VTIMESTMP="$VALUE" ;;
+      "$SECTOK") VSECTOK="$VALUE" ;;
+      "$DSH") VDSH="$VALUE" ;;
+      "$KTL") VKTL="$VALUE" ;;
+      "$_UTF8") V_UTF8="$VALUE" ;;
+      "$BGRESPONSE") VBGRESPONSE="$VALUE" ;;
+      "$SKIPCAPTCHA") VSKIPCAPTCHA="$VALUE" ;;
+      "$SIGNUPTOKEN") VSIGNUPTOKEN="$VALUE" ;;
+      "$SIGNUPTOKENA") VSIGNUPTOKENA="$VALUE" ;;
+      "$SIGNUPTOKENS") VSIGNUPTOKENS="$VALUE" ;;
+      "$RECAPTCHAKV") VRECAPTCHAKV="$VALUE" ;;
+      "$RECAPTCHAC") VRECAPTCHAC="$VALUE" ;;
+      "$SUBMIT") VSUBMIT="$VALUE" ;;
     esac
   done < "$WORKDIR/$CSVFILE"
-  ## Hidden fields
-  VSECTOK="secTok"
-
 }
 
 function setPost {
@@ -196,7 +211,14 @@ function setPost {
   ## TODO Maybe I need an IF for different services
   POSTDATA="$POSTDATA;$BMONTH=$VBMONTH;$BDAY=$VBDAY"
   POSTDATA="$POSTDATA;$BYEAR=$VBYEAR;$GENDER=$VGENDER"
-  POSTDATA="$POSTDATA;$EMAIL=$VEMAIL;$TOS=$VTOS\""
+  POSTDATA="$POSTDATA;$EMAIL=$VEMAIL;$TOS=$VTOS"
+  POSTDATA="$POSTDATA;$TIMESTAMP=$VTIMESTMP;$SECTOK=$VSECTOK"
+  POSTDATA="$POSTDATA;$DSH=$VDSH;$KTL=$VKTL;$_UTF8=$V_UTF8"
+  POSTDATA="$POSTDATA;$BGRESPONSE=$VBGRESPONSE"
+  POSTDATA="$POSTDATA;$SKIPCAPTCHA=$VSKIPCAPTCHA;$SIGNUPTOKEN=$VSIGNUPTOKEN"
+  POSTDATA="$POSTDATA;$SIGNUPTOKENA=$VSIGNUPTOKENA;$SIGNUPTOKENS=$VSIGNUPTOKENS"
+  POSTDATA="$POSTDATA;$RECAPTCHAKV=$VRECAPTCHAKV;$RECAPTCHAC=$VRECAPTCHAC"
+  POSTDATA="$POSTDATA;$SUBMIT=$VSUBMIT\""
   # TODO
   echo $CMD -XPOST -F$POSTDATA
 }

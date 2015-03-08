@@ -54,3 +54,33 @@ cat FILE | awk '{ if(NF > 0) printf("%s\n", 0)}'
 
 
 cat FILE | awk 'BEGIN {IGNORECASE=1 ; FS="<input|/input>" ; RS=">"} { print $2 }'
+
+(07:22:47 PM) Rodrigo No Se Que: user: war2
+(07:22:53 PM) Rodrigo No Se Que: pass: WarRoom2
+(07:23:18 PM) Rodrigo No Se Que: ip: 192.168.1.95
+(07:23:26 PM) Rodrigo No Se Que: db: datos
+(07:23:39 PM) Rodrigo No Se Que: table: cuentas;
+(07:24:01 PM) Rodrigo No Se Que: root
+
+
+---
+Asterisk
+---
+
+DB asterisk y asteriskcdrdb
+DBU asteriskusr
+screenshot
+
+freepbx
+U admin
+P pam111
+
+
+nat=no
+dtmfmode=auto
+canreinvite=no
+qualify=yes
+outgoinglimit=10
+call-limit=10
+busylevel=1
+(07:24:07 PM) Rodrigo No Se Que: pass nre
