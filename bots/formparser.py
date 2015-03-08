@@ -9,7 +9,9 @@ myfile = open(rawfile)
 myhtml = bs(myfile)
 #try:
 elements = [(element['name'], element['value'])
-    for element in myhtml.findAll('input', value=True)]
+    for element in myhtml.findAll('input',
+        attrs={'value':True,
+            'name':True})]
 
 for k, v in enumerate(elements):
     print v[0] + ',' + v[1].encode('ascii', 'ignore')
