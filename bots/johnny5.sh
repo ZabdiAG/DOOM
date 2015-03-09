@@ -31,9 +31,12 @@ function google {
   URL="https://accounts.google.com/SignUp"
   CMD="$CMD $URL -o $WORKDIR/$RAWFILE"
   FNAME="FirstName"
-  LNAME="LastName"
   UNAME="GmailAddress"
+  EMAIL="RecoveryEmailAddress"
   PASSWD="Passwd"
+  SECTOK="secTok"
+  ### End Common
+  LNAME="LastName"
   PASSWDC="PasswdAgain"
   LOCALE="Locale"
   INPUT="Input" # BirthDay
@@ -41,10 +44,8 @@ function google {
   BDAY="BirthDay" # 12
   BYEAR="BirthYear" # 1978
   GENDER="Gender" # FEMALE MALE OTHER
-  EMAIL="RecoveryEmailAddress"
   TOS="TermsOfService" # yes
   TIMESTAMP="timeStmp"
-  SECTOK="secTok"
   DSH="dsh"
   KTL="ktl"
   _UTF8="_utf8"
@@ -66,26 +67,22 @@ function twitter {
   mkWorkdir
   URL="https://twitter.com/signup"
   CMD="$CMD $URL -o $WORKDIR/$RAWFILE"
-  ## Form fields
   FNAME="user[name]"
-  SNAME="user[screen_name]"
-  UNAME="user[email]"
+  UNAME="user[screen_name]"
+  EMAIL="user[email]"
   PASSWD="user[user_password]"
-  COOKIE="user[use_cookie_personalization]"
-  VFNAME="FirstName"
-  VSNAME="Screen_Name"
-  VUNAME="GmailAddress"
-  VPASSWD="Passwd"
-  VCOOKIE="personalization"
-  VAUT_TOKEN="authenticity_token"
+  SECTOK="authenticity_token"
+  ## End Common
+  ## TODO COOKIE="user[use_cookie_personalization]"
+  ##VCOOKIE="personalization"
   VSIGNUP="signup_ui_metrics"
-  VPERSONALIZATION="asked_cookie_personalization_setting"
-  VCONTEXT="context"
-  VID="ad_id"
-  VREF="ad_ref"
-  VREMENBER="user[remember_me_on_signup]"
-  VDISCOVERABLE="user[discoverable_by_email]"
-  VSEND="user[send_email_newsletter]"
+  #VPERSONALIZATION="asked_cookie_personalization_setting"
+  #VCONTEXT="context"
+  #VID="ad_id"
+  #VREF="ad_ref"
+  #VREMENBER="user[remember_me_on_signup]"
+  #VDISCOVERABLE="user[discoverable_by_email]"
+  #VSEND="user[send_email_newsletter]"
 
   ## Get registration form
   $CMD
@@ -97,13 +94,13 @@ function facebook {
   mkWorkdir
   URL="https://facebook.com"
   CMD="$CMD $URL -o $WORKDIR/$RAWFILE"
-  ## Form fields
   FNAME="firstname"
-  LNAME="lastname"
   UNAME="reg_email__"
+
   UNAMECONF="reg_email_confirmation__"
   PASSWD="reg_passwd__"
 #  PASSWDC="PasswdAgain"
+  LNAME="lastname"
   LOCALE="locale"
   INPUT="Input" # BirthDay
   BMONTH="birthday_month" # 10
@@ -174,9 +171,11 @@ function csv2var {
   do
     case "$FIELD" in
       "$FNAME") VFNAME="$VALUE" ;;
-      "$LNAME") VLNAME="$VALUE" ;;
       "$UNAME") VUNAME="$VALUE" ;;
+      "$EMAIL") VEMAIL="$VALUE" ;;
       "$PASSWD") VPASSWD="$VALUE" ;;
+      "$SECTOK") VSECTOK="$VALUE" ;; ## End Common
+      "$LNAME") VLNAME="$VALUE" ;;
       "$PASSWDC") VPASSWDC="$VALUE" ;;
       "$LOCALE") VLOCALE="$VALUE" ;;
       "$INPUT") VINPUT="$VALUE" ;;
@@ -184,10 +183,8 @@ function csv2var {
       "$BDAY") VBDAY="$VALUE" ;;
       "$BYEAR") VBYEAR="$VALUE" ;;
       "$GENDER") VGENDER="$VALUE" ;;
-      "$EMAIL") VEMAIL="$VALUE" ;;
       "$TOS") VTOS="$VALUE" ;;
       "$TIMESTAMP") VTIMESTMP="$VALUE" ;;
-      "$SECTOK") VSECTOK="$VALUE" ;;
       "$DSH") VDSH="$VALUE" ;;
       "$KTL") VKTL="$VALUE" ;;
       "$_UTF8") V_UTF8="$VALUE" ;;
