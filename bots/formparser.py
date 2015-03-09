@@ -4,10 +4,16 @@
 from BeautifulSoup import BeautifulSoup as bs
 import sys
 
-rawfile = sys.argv[1]
+rawfile = sys.argv[1] ## Where is the HTML file to parse
+# TODO formname = sys.argv[2] ## Search only for one form the signup one
+
 myfile = open(rawfile)
 myhtml = bs(myfile)
-#try:
+# Form tag to get the Action attribute
+#myform = myhtml.find('form', formname)
+
+#print form
+# Get Input fields and values
 elements = [(element['name'], element['value'])
     for element in myhtml.findAll('input',
         attrs={'value':True,
@@ -15,9 +21,3 @@ elements = [(element['name'], element['value'])
 
 for k, v in enumerate(elements):
     print v[0] + ',' + v[1].encode('ascii', 'ignore')
-    # TODO Quotes or not? print '"' + v[0] + '","' + v[1].encode('ascii', 'ignore') + '"'
-
-#except KeyError:
-#    pass
-
-

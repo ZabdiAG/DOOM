@@ -73,9 +73,14 @@ function twitter {
   PASSWD="user[user_password]"
   SECTOK="authenticity_token"
   ## End Common
+  SUIMET="signup_ui_metrics"
+  ACPS="asked_cookie_personalization_setting"
+  CONTEXT="context"
+  AI="ad_id"
+  AR="ad_ref"
   ## TODO COOKIE="user[use_cookie_personalization]"
   ##VCOOKIE="personalization"
-  VSIGNUP="signup_ui_metrics"
+  #VSIGNUP="signup_ui_metrics"
   #VPERSONALIZATION="asked_cookie_personalization_setting"
   #VCONTEXT="context"
   #VID="ad_id"
@@ -169,13 +174,15 @@ esac
 function csv2var {
   while IFS=',' read -r FIELD VALUE
   do
+    ## TODO Split by services
+    ## Common fields
     case "$FIELD" in
       "$FNAME") VFNAME="$VALUE" ;;
       "$UNAME") VUNAME="$VALUE" ;;
       "$EMAIL") VEMAIL="$VALUE" ;;
       "$PASSWD") VPASSWD="$VALUE" ;;
       "$SECTOK") VSECTOK="$VALUE" ;; ## End Common
-      "$LNAME") VLNAME="$VALUE" ;;
+      "$LNAME") VLNAME="$VALUE" ;; ## Google starts
       "$PASSWDC") VPASSWDC="$VALUE" ;;
       "$LOCALE") VLOCALE="$VALUE" ;;
       "$INPUT") VINPUT="$VALUE" ;;
@@ -197,6 +204,16 @@ function csv2var {
       "$RECAPTCHAC") VRECAPTCHAC="$VALUE" ;;
       "$SUBMIT") VSUBMIT="$VALUE" ;;
     esac
+    ## TODO Google only fields here
+    ## Twitter only fields
+    case "$FIELD" in
+      "$SUIMET") VSUIMET="$VALUE" ;;
+      "$ACPS") VACPS="$VALUE" ;;
+      "$CONTEXT") VCONTEXT="$VALUE" ;;
+      "$AI") VAI="$VALUE" ;;
+      "$AR") VAR="$VALUE" ;;
+
+    esac
   done < "$WORKDIR/$CSVFILE"
 }
 
@@ -206,15 +223,27 @@ function setPost {
   POSTDATA="$POSTDATA;$PASSWD=$VPASSWD;$PASSWDC=$VPASSWDC"
   POSTDATA="$POSTDATA;$LOCALE=$VLOCALE;$INPUT=$VINPUT"
   ## TODO Maybe I need an IF for different services
-  POSTDATA="$POSTDATA;$BMONTH=$VBMONTH;$BDAY=$VBDAY"
-  POSTDATA="$POSTDATA;$BYEAR=$VBYEAR;$GENDER=$VGENDER"
-  POSTDATA="$POSTDATA;$EMAIL=$VEMAIL;$TOS=$VTOS"
-  POSTDATA="$POSTDATA;$TIMESTAMP=$VTIMESTMP;$SECTOK=$VSECTOK"
-  POSTDATA="$POSTDATA;$DSH=$VDSH;$KTL=$VKTL;$_UTF8=$V_UTF8"
-  POSTDATA="$POSTDATA;$BGRESPONSE=$VBGRESPONSE"
-  POSTDATA="$POSTDATA;$SKIPCAPTCHA=$VSKIPCAPTCHA;$SIGNUPTOKEN=$VSIGNUPTOKEN"
-  POSTDATA="$POSTDATA;$SIGNUPTOKENA=$VSIGNUPTOKENA;$SIGNUPTOKENS=$VSIGNUPTOKENS"
-  POSTDATA="$POSTDATA;$RECAPTCHAKV=$VRECAPTCHAKV;$RECAPTCHAC=$VRECAPTCHAC"
+  ## Twitter only
+  if [ $1 = 'twitter' ]; then
+    POSTDATA="$POSTDATA;$SUIMET=$VSUIMET;$ACPS=$VACPS;$AI=$VAI;$AR=$VAR"
+  fi
+  ## Google only
+  if [ $1 = 'google' ]; then
+    POSTDATA="$POSTDATA;$BMONTH=$VBMONTH;$BDAY=$VBDAY"
+    POSTDATA="$POSTDATA;$BYEAR=$VBYEAR;$GENDER=$VGENDER"
+    POSTDATA="$POSTDATA;$EMAIL=$VEMAIL;$TOS=$VTOS"
+    POSTDATA="$POSTDATA;$TIMESTAMP=$VTIMESTMP;$SECTOK=$VSECTOK"
+    POSTDATA="$POSTDATA;$DSH=$VDSH;$KTL=$VKTL;$_UTF8=$V_UTF8"
+    POSTDATA="$POSTDATA;$BGRESPONSE=$VBGRESPONSE"
+    POSTDATA="$POSTDATA;$SKIPCAPTCHA=$VSKIPCAPTCHA;$SIGNUPTOKEN=$VSIGNUPTOKEN"
+    POSTDATA="$POSTDATA;$SIGNUPTOKENA=$VSIGNUPTOKENA;$SIGNUPTOKENS=$VSIGNUPTOKENS"
+    POSTDATA="$POSTDATA;$RECAPTCHAKV=$VRECAPTCHAKV;$RECAPTCHAC=$VRECAPTCHAC"
+  fi
+  ## Facebook only
+  if [ $1 = 'facebook' ]; then
+    ## TODO
+    echo 'facebook'
+  fi
   POSTDATA="$POSTDATA;$SUBMIT=$VSUBMIT\""
   # TODO
   echo $CMD -XPOST -F$POSTDATA
