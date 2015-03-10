@@ -1,5 +1,6 @@
 #!/bin/bash
 
+SOCNET="$1"
 TEMPDIR=/tmp
 WORKDIR="$TEMPDIR/goose/$(date +%Y%m%d%H%M%s)"
 CWD=$(pwd)
@@ -23,7 +24,6 @@ function mkWorkdir {
 function lookFields {
   $SCRIPTSDIR/formparser.py $WORKDIR/$RAWFILE > $WORKDIR/$CSVFILE
 }
-
 
 ## VARIABLE="FieldName" <-- The name attribute of the form field
 function google {
@@ -176,6 +176,7 @@ function csv2var {
   do
     ## TODO Split by services
     ## Common fields
+    echo "$FIELD"
     case "$FIELD" in
       "$FNAME") VFNAME="$VALUE" ;;
       "$UNAME") VUNAME="$VALUE" ;;
@@ -219,32 +220,34 @@ function csv2var {
 
 function setPost {
   ## multipart/form-data
-  POSTDATA="\"$FNAME=$VFNAME;$LNAME=$VLNAME;$UNAME=$VUNAME"
-  POSTDATA="$POSTDATA;$PASSWD=$VPASSWD;$PASSWDC=$VPASSWDC"
-  POSTDATA="$POSTDATA;$LOCALE=$VLOCALE;$INPUT=$VINPUT"
+  POSTDATA="\"$FNAME=$VFNAME;$UNAME=$VUNAME"
+  POSTDATA="$POSTDATA;$EMAIL=$VEMAIL;$PASSWD=$VPASSWD"
   ## TODO Maybe I need an IF for different services
   ## Twitter only
-  if [ $1 = 'twitter' ]; then
+  if [ "$SOCNET" = twitter ] ; then
     POSTDATA="$POSTDATA;$SUIMET=$VSUIMET;$ACPS=$VACPS;$AI=$VAI;$AR=$VAR"
+    POSTDATA="$POSTDATA;$CONTEXT=$VCONTEXT;$SECTOK=$VSECTOK"
   fi
   ## Google only
-  if [ $1 = 'google' ]; then
+  if [ "$SOCNET" = google ] ; then
+    POSTDATA="$LNAME=$VLNAME;$PASSWDC=$VPASSWDC"
+    POSTDATA="$POSTDATA;$LOCALE=$VLOCALE;$INPUT=$VINPUT"
     POSTDATA="$POSTDATA;$BMONTH=$VBMONTH;$BDAY=$VBDAY"
     POSTDATA="$POSTDATA;$BYEAR=$VBYEAR;$GENDER=$VGENDER"
-    POSTDATA="$POSTDATA;$EMAIL=$VEMAIL;$TOS=$VTOS"
-    POSTDATA="$POSTDATA;$TIMESTAMP=$VTIMESTMP;$SECTOK=$VSECTOK"
+    POSTDATA="$POSTDATA;$TOS=$VTOS"
+    POSTDATA="$POSTDATA;$TIMESTAMP=$VTIMESTMP"
     POSTDATA="$POSTDATA;$DSH=$VDSH;$KTL=$VKTL;$_UTF8=$V_UTF8"
     POSTDATA="$POSTDATA;$BGRESPONSE=$VBGRESPONSE"
     POSTDATA="$POSTDATA;$SKIPCAPTCHA=$VSKIPCAPTCHA;$SIGNUPTOKEN=$VSIGNUPTOKEN"
     POSTDATA="$POSTDATA;$SIGNUPTOKENA=$VSIGNUPTOKENA;$SIGNUPTOKENS=$VSIGNUPTOKENS"
     POSTDATA="$POSTDATA;$RECAPTCHAKV=$VRECAPTCHAKV;$RECAPTCHAC=$VRECAPTCHAC"
+    POSTDATA="$POSTDATA;$SUBMIT=$VSUBMIT\""
   fi
   ## Facebook only
-  if [ $1 = 'facebook' ]; then
+  if [ "$SOCNET" = facebook ]; then
     ## TODO
     echo 'facebook'
   fi
-  POSTDATA="$POSTDATA;$SUBMIT=$VSUBMIT\""
   # TODO
   echo $CMD -XPOST -F$POSTDATA
 }
